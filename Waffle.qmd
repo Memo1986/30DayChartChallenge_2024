@@ -1,0 +1,101 @@
+---
+title: "Gráfico de Waffle"
+author: "El Memo de mileto"
+format: html
+editor: visual
+---
+
+# Gráfico de Waffle
+
+## Instalar librerías
+
+```{r}
+# install.packages("waffle")
+# install.packages("ggimage")
+# install.packages('htmltools')
+# devtools::install_github("liamgilbey/ggwaffle")
+# remotes::install_github("hrbrmstr/waffle")
+```
+
+## Cargar librerías
+
+```{r}
+library(waffle)
+library(magrittr)
+library(hrbrthemes)
+library(ggplot2)
+library(dplyr)
+library(waffle)
+```
+
+## Crear el Grafico
+
+Cargar los datos
+
+```{r}
+nar <- read.csv("Datos/Naranja.csv", header = TRUE, check.names = FALSE)
+
+```
+
+Crear una función para identificar que tipo de codificación requiere nuestra base de datos
+
+```{r}
+# Intentar leer el archivo CSV con diferentes codificaciones
+encodings <- c("UTF-8", "latin1", "windows-1252")
+
+for (encoding in encodings) {
+  nar_0 <- tryCatch({
+    read.csv("Datos/Naranja.csv", header = TRUE, encoding = encoding)
+  }, error = function(e) {
+    NULL
+  })
+  
+  if (!is.null(nar_0)) {
+    print(paste("El archivo se leyó exitosamente con la codificación", encoding))
+    break
+  }
+}
+
+# Si no se pudo leer el archivo con ninguna codificación, mostrar un mensaje de error
+if (is.null(nar_0)) {
+  stop("No se pudo leer el archivo con ninguna de las codificaciones especificadas.")
+} else {
+  # Hacer algo con nar_0, por ejemplo, imprimir las primeras filas
+  print(head(nar_0))
+}
+
+```
+
+Almacenar los datos en la variable de **nar_1**
+
+```{r}
+nar_1 <-  read.csv("Datos/Naranja.csv", header = TRUE, encoding = "latin1")
+head(nar_1)
+```
+
+Convertir a factor las primeras tres columnas
+
+```{r}
+nar_1_col <- c("Entidad", "Distrito", "Municipio")
+
+for (col in nar_1_col) {
+  nar_1[[col]] <- factor(nar_1[[col]])
+}
+```
+
+```{r}
+regiones <- data_frame(
+  Region = c("Altiplano", "Centro", "Huasteca", "Media"),
+  Municipio = c(14, 13, 19, 11)
+)
+```
+
+```{r}
+waffle(regiones, rows = 6, colors = c("#8B6508", "#EEDD82", "#008B00", "#76EEC6"),
+       title = "Municipios por región del estado de San Luis Potosí",
+       xlab= "Municipios por región")
+```
+
+Fuentes :
+
+[wuafle](https://github.com/hrbrmstr/waffle)
