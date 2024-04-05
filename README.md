@@ -2,4 +2,4 @@
 
 Este repositorio contiene los gráficos realizados para el **30DayChartChallenge** del **2024**
 
-Esta es la primera participación usando el lenguaje de programación de R.
+Primera participación usando el lenguaje de programación de *R*.
